@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout | T-Shirt Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="p-6 bg-gray-100">
+  <h1 class="text-3xl font-bold mb-6">Checkout</h1>
+  <button onclick="payNow()" class="bg-purple-600 text-white px-6 py-3 rounded hover:bg-purple-700">Pay with Razorpay</button>
+
+  <script>
+    function payNow() {
+      var options = {
+        key: "rzp_test_1DP5mmOlF5G5ag", // Replace with your Razorpay test key
+        amount: localStorage.getItem("total") * 100,
+        currency: "INR",
+        name: "T-Shirt Store",
+        description: "Test Transaction",
+        handler: function (response) {
+          alert("Payment successful! Razorpay ID: " + response.razorpay_payment_id);
+        },
+        prefill: {
+          name: "Customer",
+          email: "customer@example.com",
+        },
+        theme: {
+          color: "#6366F1"
+        }
+      };
+      var rzp = new Razorpay(options);
+      rzp.open();
+    }
+  </script>
+</body>
+</html>

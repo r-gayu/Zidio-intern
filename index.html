@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GenZ Clothing</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+
+
+  <!-- Header -->
+  <div class="w-full">
+    <img src="logo.jpeg" alt="Cover Image" class="w-full h-auto object-cover max-h-[200px]" />
+  </div>
+  <div class="flex justify-end items-center px-8 py-4 space-x-4">
+    <a href="cart.html" class="inline-block bg-green-600 text-white font-semibold px-4 py-2 rounded shadow hover:bg-green-700 transition duration-200">
+      View Cart
+    </a>
+   
+  </div>
+
+  
+  
+
+
+  <section class="text-center py-10">
+    <h1 class="text-4xl font-bold text-red-800 mb-2">GenZ Clothing</h1>
+    <h2 class="text-2xl font-bold text-gray-400 mb-1">
+      "Discover Your Style: Unveil the unique blend of fashion, creativity, and self-expression..."
+    </h2>
+    <p class="text-gray-500">Trendy T-Shirts at Best Prices</p>
+  </section>
+  
+  <!-- T-Shirts Section -->
+  <section class="container mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 pb-16">
+
+    <!-- Template for 10 T-Shirts -->
+    <!-- Just change image src, name, price -->
+    <script>
+      const tshirts = [
+        { name: "Marvel", price: 499, image: "tshirt1.jpeg" },
+        { name: "Spiderman", price: 549, image: "tshirt2.jpeg" },
+        { name: "Ironman", price: 599, image: "tshirt3.jpeg" },
+        { name: "Captain", price: 479, image: "tshirt4.webp" },
+        { name: "Batman", price: 519, image: "tshirt5.webp" },
+        { name: "Superman", price: 489, image: "tshirt6.jpeg" },
+        { name: "Flash", price: 569, image: "tshirt7.webp" },
+        { name: "Avengers", price: 649, image: "tshirt8.webp" },
+        { name: "Wakanda", price: 699, image: "tshirt9.jpeg" },
+        { name: "Thor", price: 539, image: "tshirt10.webp" },
+      ];
+    </script>
+
+    <!-- T-Shirt Cards Rendered by JavaScript -->
+    <div id="tshirt-container" class="contents"></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-white text-center py-4 border-t text-gray-500">
+    &copy; 2025 T-Shirt Store. All rights reserved.
+  </footer>
+
+  <!-- Logout Button -->
+  <div class="text-center py-4">
+    <button onclick="logout()" class="text-red-500 hover:underline text-lg">Logout</button>
+  </div>
+
+  <!-- Script Section -->
+  <script>
+    // Redirect if not logged in
+    window.onload = function () {
+      if (!localStorage.getItem('user')) {
+        window.location.href = "login.html";
+      }
+
+      // Render T-Shirts
+      const container = document.getElementById("tshirt-container");
+      tshirts.forEach((shirt, index) => {
+        const sizeId = `size-${index + 1}`;
+        container.innerHTML += `
+          <div class="bg-white rounded-lg p-4 shadow hover:shadow-xl">
+            <img src="${shirt.image}" class="w-full rounded-lg" alt="${shirt.name}">
+            <h2 class="text-xl font-bold mt-2">${shirt.name}</h2>
+            <p class="text-gray-600 mb-2">₹${shirt.price}</p>
+            <label class="block mb-2">Size:</label>
+            <select class="border rounded px-2 py-1 mb-2 w-full" id="${sizeId}">
+              <option value="">Select size</option>
+              <option>S</option>
+              <option>M</option>
+              <option>L</option>
+              <option>XL</option>
+              <option>XXL</option>
+            </select>
+            <button onclick="addToCart('${shirt.name}', ${shirt.price}, '${sizeId}')" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">
+              Add to Cart
+            </button>
+          </div>
+        `;
+      });
+    };
+
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+    function addToCart(name, price, sizeId) {
+      const size = document.getElementById(sizeId).value;
+      if (!size) {
+        alert("Please select a size.");
+        return;
+      }
+
+      cart.push({ name, price, size });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${name} (Size: ${size}) added to cart!`);
+    }
+
+    function logout() {
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
+    }
+
+    function signup() {
+      const username = document.getElementById("signup-username").value;
+      const password = document.getElementById("signup-password").value;
+
+      if (!username || !password) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      if (users[username]) {
+        alert("Username already exists.");
+        return;
+      }
+
+      users[username] = password;
+      localStorage.setItem("users", JSON.stringify(users));
+      alert("Signup successful! Please log in.");
+      window.location.href = "login.html";
+    }
+
+    function login() {
+      const username = document.getElementById("login-username").value;
+      const password = document.getElementById("login-password").value;
+
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+      if (users[username] && users[username] === password) {
+        localStorage.setItem("user", username);
+        window.location.href = "index.html";
+      } else {
+        alert("Invalid username or password.");
+      }
+    }
+    
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      location.reload();
+    }
+  </script>
+
+</body>
+</html>
